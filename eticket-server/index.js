@@ -1,11 +1,11 @@
-const express = require('express');
-const cors = require('cors');
+import express from 'express';
+import cors from 'cors';
 const app = express();
 const port = 8040;
 
 //middleware
 app.use(cors());
-app.use(express.json());
+app.use(json());
 
 const ticketArray = [];
 

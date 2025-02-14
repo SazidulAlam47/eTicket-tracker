@@ -1,8 +1,9 @@
 {
   "name": "eticket-server",
   "version": "1.0.0",
-  "description": "eticket-server",
+  "description": "eTicket server for ticket trucking",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js"
