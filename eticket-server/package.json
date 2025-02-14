@@ -1,7 +1,7 @@
 {
-  "name": "sms-server",
+  "name": "eticket-server",
   "version": "1.0.0",
-  "description": "sms to url",
+  "description": "eticket-server",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
