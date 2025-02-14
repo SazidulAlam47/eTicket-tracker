@@ -5,7 +5,7 @@ const port = 8040;
 
 //middleware
 app.use(cors());
-app.use(json());
+app.use(express.json());
 
 const ticketArray = [];
 
