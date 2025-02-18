@@ -45,7 +45,10 @@ const Home = () => {
                     navigate("/table");
                 }
             })
-            .catch((error) => console.error("Error:", error));
+            .catch((error) => {
+                alert("Can not connect to server");
+                console.error("Error:", error);
+            });
     };
 
     return (
@@ -131,7 +134,7 @@ const Home = () => {
                         onClick={sendData}
                         className="w-full mt-6 px-4 py-3 bg-blue-500 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-blue-600 transition duration-300"
                     >
-                        Start
+                        Start Scanning
                     </button>
                 )}
             </div>

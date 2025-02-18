@@ -1,15 +1,14 @@
 import puppeteer from "puppeteer";
 import { targetUrls } from './index.js';
 
-
-let browserInstance; // Store the browser instance to use in stopPuppeteer function
+let browserInstance;
 export const ticketArray = [];
-const pageReloadIntervals = []; // Store interval IDs for page reloads
-const pageTimeouts = []; // Store timeout IDs for initial checks
+const pageReloadIntervals = [];
+const pageTimeouts = [];
 
 export async function startPuppeteer() {
     browserInstance = await puppeteer.launch({
-        headless: true, // Set to true for headless mode
+        headless: true,
         defaultViewport: null,
         args: ["--start-maximized"],
     });
@@ -37,11 +36,9 @@ export async function startPuppeteer() {
                     seatElements.forEach((seat) => {
                         const seatNumber = parseInt(seat.innerText);
                         if (seatNumber > 0) {
-                            // Train Name Extraction
                             const trainNameParent = seat.closest('.single-trip-wrapper');
                             const trainName = trainNameParent.querySelector('.trip-name h2')?.innerText.trim() || 'Train not found';
 
-                            // Train Class Extraction
                             const seatClassParent = seat.closest('.single-seat-class');
                             const seatClass = seatClassParent.querySelector('.seat-class-name')?.innerText.trim() || 'Class not found';
 
@@ -60,23 +57,34 @@ export async function startPuppeteer() {
                     return results;
                 });
 
-                ticketArray.push(...data); // Add the fetched ticket data to the ticketArray
+                data.forEach(ticket => {
+                    const exists = ticketArray.some(t =>
+                        t.train === ticket.train &&
+                        t.class === ticket.class &&
+                        t.date === ticket.date &&
+                        t.seat === ticket.seat &&
+                        t.fromTo === ticket.fromTo
+                    );
+
+                    if (!exists) {
+                        ticketArray.push(ticket);
+                    }
+                });
+
                 console.log(data);
             }
         };
 
         const timeDelay = [500, 1000, 5000, 10000, 15000];
 
-        // Function to reload the page and get data after reload
         const reloadAndGrabData = async () => {
             console.log("Reloading page...");
             await page.reload({ waitUntil: "networkidle2" });
             checked = false;
             console.log("Page reloaded, fetching data...");
-            await getSeats(); // Re-run the data fetching function after page reload
+            await getSeats();
         };
 
-        // Set timeouts to fetch data at different intervals
         for (let delay of timeDelay) {
             const timeoutId = setTimeout(async () => {
                 if (!checked) {
@@ -87,18 +95,15 @@ export async function startPuppeteer() {
             pageTimeouts.push(timeoutId);
         }
 
-        // Reload the page every 20 seconds and grab data after reloading
         const intervalId = setInterval(async () => {
             await reloadAndGrabData();
         }, 20000);
         pageReloadIntervals.push(intervalId);
 
-        // Close the page after processing
         page.on('close', () => console.log(`Closed page for ${url}`));
     }
 }
 
-// Function to stop Puppeteer
 export async function stopPuppeteer() {
     if (!browserInstance) {
         console.log("Puppeteer is not running or has already been stopped.");
@@ -108,35 +113,31 @@ export async function stopPuppeteer() {
     console.log("Stopping Puppeteer...");
 
     try {
-        // Step 1: Clear all timeouts and intervals
         pageTimeouts.forEach(clearTimeout);
         pageTimeouts.length = 0;
 
         pageReloadIntervals.forEach(clearInterval);
         pageReloadIntervals.length = 0;
 
-        // Step 2: Close all open pages gracefully
         const pages = await browserInstance.pages();
         for (let page of pages) {
             try {
-                page.removeAllListeners(); // Prevent async tasks from triggering after close
-                await page.evaluate(() => window.stop()); // Stop any ongoing network requests
+                page.removeAllListeners();
+                await page.evaluate(() => window.stop());
                 await page.close({ runBeforeUnload: true });
             } catch (error) {
                 console.warn(`Error closing page: ${error.message}`);
             }
         }
 
-        // Step 3: Close the browser instance only if it's still connected
         if (browserInstance.isConnected()) {
             await browserInstance.close();
         }
 
-        // Step 4: Force kill Puppeteer process (if it still exists)
         const browserProcess = browserInstance.process();
         if (browserProcess) {
             try {
-                process.kill(browserProcess.pid, 'SIGKILL'); // Hard kill the process
+                process.kill(browserProcess.pid, 'SIGKILL');
             } catch (error) {
                 console.warn(`Puppeteer process was already terminated: ${error.message}`);
             }
@@ -146,9 +147,6 @@ export async function stopPuppeteer() {
     } catch (error) {
         console.error("Error while stopping Puppeteer:", error);
     } finally {
-        browserInstance = null; // Ensure it's fully reset
+        browserInstance = null;
     }
 }
-
-
-

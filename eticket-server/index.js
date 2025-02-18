@@ -34,6 +34,7 @@ app.get("/clear", (req, res) => {
 
 app.get("/stop", (req, res) => {
     stopPuppeteer();
+    ticketArray.length = 0;
     res.json({ success: true });
 });
 
