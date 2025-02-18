@@ -61,7 +61,7 @@ app.post("/start", (req, res) => {
 
 // Start the Express Server
 app.listen(port, () => {
-    console.log(`🚀 Server running on http://localhost:${port}`);
+    console.log(`🚀 Server running on Port:${port}`);
 });
 
 export default app;
