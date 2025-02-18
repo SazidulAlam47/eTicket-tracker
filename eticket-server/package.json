@@ -1,17 +1,25 @@
 {
-  "name": "eticket-server",
+  "name": "puppeteer-code",
   "version": "1.0.0",
-  "description": "eTicket server for ticket trucking",
+  "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js"
   },
-  "author": "Sazidul Alam",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.21.1"
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "puppeteer": "^24.2.1"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "puppeteer"
+    ]
   }
 }
