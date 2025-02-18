@@ -115,7 +115,7 @@ const Home = () => {
                                 min={new Date().toISOString().split("T")[0]} // Today
                                 max={
                                     new Date(
-                                        Date.now() + 10 * 24 * 60 * 60 * 1000
+                                        Date.now() + 11 * 24 * 60 * 60 * 1000
                                     )
                                         .toISOString()
                                         .split("T")[0]
