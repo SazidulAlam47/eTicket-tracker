@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
@@ -21,6 +21,10 @@ const Home = () => {
             }))
         );
     };
+
+    useEffect(() => {
+        fetch("http://localhost:8040/stop");
+    }, []);
 
     const handleChange = (index, field, value) => {
         const updatedScans = [...scans];
