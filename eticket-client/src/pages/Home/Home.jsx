@@ -126,7 +126,7 @@ const Home = () => {
                                         Date.now() + 10 * 24 * 60 * 60 * 1000
                                     )
                                 )} // Today + 10 days in Dhaka time
-                                onFocus={(e) => e.target.showPicker()} // Triggers the date picker
+                                onClick={(e) => e.target.showPicker()} // Triggers the date picker
                                 onChange={(e) =>
                                     handleChange(index, "date", e.target.value)
                                 }
