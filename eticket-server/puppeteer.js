@@ -17,8 +17,6 @@ export async function startPuppeteer() {
         for (let url of targetUrls) {
             try {
                 const page = await browserInstance.newPage();
-
-                // Try to navigate to the page with a 30s timeout
                 await page.goto(url, { waitUntil: "networkidle2", timeout: 30000 });
 
                 let checked = false;
@@ -54,6 +52,7 @@ export async function startPuppeteer() {
                                         seat: seatNumber,
                                         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }),
                                         link: window.location.href,
+                                        available: true,
                                     });
                                 }
                             });
@@ -61,13 +60,52 @@ export async function startPuppeteer() {
                             return results;
                         });
 
+                        // if the ticket still available or not
+                        ticketArray.forEach(ticket => {
+                            const exists = data.some(newTicket =>
+                                newTicket.train === ticket.train &&
+                                newTicket.class === ticket.class &&
+                                newTicket.date === ticket.date &&
+                                newTicket.seat === ticket.seat &&
+                                newTicket.fromTo === ticket.fromTo
+                            );
+
+                            if (!exists) {
+                                ticket.available = false;
+                                ticket.seat = 'N/A'
+                            }
+                        });
+
+                        // if it is the same ticket but seat number changes, update seat count
+                        data.forEach(ticket => {
+                            const existingTicket = ticketArray.find(t =>
+                                t.train === ticket.train &&
+                                t.class === ticket.class &&
+                                t.date === ticket.date &&
+                                t.fromTo === ticket.fromTo
+                            );
+
+                            if (existingTicket) {
+                                if (existingTicket.seat !== ticket.seat) {
+                                    existingTicket.seat = ticket.seat; // Update only seat number
+                                }
+                                existingTicket.available = ticket.available;
+                                existingTicket.time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+                            } else {
+                                ticketArray.push(ticket); // Add new ticket if not already in the array
+                            }
+                        });
+
+
+                        // if it is same ticket or not
                         data.forEach(ticket => {
                             const exists = ticketArray.some(t =>
                                 t.train === ticket.train &&
                                 t.class === ticket.class &&
                                 t.date === ticket.date &&
                                 t.seat === ticket.seat &&
-                                t.fromTo === ticket.fromTo
+                                t.fromTo === ticket.fromTo &&
+                                t.available === ticket.available
                             );
 
                             if (!exists) {

@@ -24,14 +24,57 @@ const Table = () => {
                         return;
                     }
 
+                    console.log({
+                        new: data.tickets,
+                        old: previousDataRef.current,
+                    });
+
                     if (
                         JSON.stringify(data.tickets) !==
                             JSON.stringify(previousDataRef.current) &&
                         data.tickets.length <= 6
                     ) {
-                        console.log("New tickets available");
-                        notificationAudio.current.currentTime = 0;
-                        notificationAudio.current.play();
+                        let shouldPlayAudio = false;
+
+                        data.tickets.forEach((newTicket) => {
+                            const matchingOldTicket =
+                                previousDataRef.current.find(
+                                    (oldTicket) =>
+                                        oldTicket.train === newTicket.train &&
+                                        oldTicket.class === newTicket.class &&
+                                        oldTicket.date === newTicket.date &&
+                                        oldTicket.fromTo === newTicket.fromTo
+                                );
+
+                            if (!matchingOldTicket) {
+                                // A completely new ticket has been added
+                                shouldPlayAudio = true;
+                            } else {
+                                // Check for availability change
+                                if (
+                                    matchingOldTicket.available === false &&
+                                    newTicket.available === true
+                                ) {
+                                    shouldPlayAudio = true;
+                                }
+
+                                // Ignore seat number changes (do not trigger audio)
+                                if (
+                                    matchingOldTicket.available ===
+                                        newTicket.available &&
+                                    matchingOldTicket.seat !== newTicket.seat
+                                ) {
+                                    shouldPlayAudio = false;
+                                }
+                            }
+                        });
+
+                        console.log({ shouldPlayAudio });
+
+                        if (shouldPlayAudio) {
+                            notificationAudio.current.currentTime = 0;
+                            notificationAudio.current.play();
+                        }
                     }
 
                     previousDataRef.current = data.tickets;
@@ -116,6 +159,7 @@ const Table = () => {
                             <th className="p-4 border-b">Date</th>
                             <th className="p-4 border-b">Seats</th>
                             <th className="p-4 border-b">Was available at</th>
+                            <th className="p-4 border-b">Availability</th>
                             <th className="p-4 border-b">Purchase</th>
                         </tr>
                     </thead>
@@ -149,21 +193,38 @@ const Table = () => {
                                     <td className="p-4">{ticket.date}</td>
                                     <td className="p-4">{ticket.seat}</td>
                                     <td className="p-4">{ticket.time}</td>
+                                    <td
+                                        className={`p-4 ${
+                                            ticket.available
+                                                ? "text-green-900"
+                                                : "text-red-800"
+                                        }`}
+                                    >
+                                        {ticket.available
+                                            ? "Available"
+                                            : "Not available"}
+                                    </td>
                                     <td className="p-4">
-                                        <a
-                                            href={`https://eticket.railway.gov.bd/booking/train/search?fromcity=${
-                                                ticket.fromTo.split(" - ")[0]
-                                            }&tocity=${
-                                                ticket.fromTo.split(" - ")[1]
-                                            }&doj=${formattedDate}&class=${
-                                                ticket.class
-                                            }`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-800 transition-all inline-block"
-                                        >
-                                            Purchase
-                                        </a>
+                                        {ticket.available && (
+                                            <a
+                                                href={`https://eticket.railway.gov.bd/booking/train/search?fromcity=${
+                                                    ticket.fromTo.split(
+                                                        " - "
+                                                    )[0]
+                                                }&tocity=${
+                                                    ticket.fromTo.split(
+                                                        " - "
+                                                    )[1]
+                                                }&doj=${formattedDate}&class=${
+                                                    ticket.class
+                                                }`}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-800 transition-all inline-block disabled:bg-green-950"
+                                            >
+                                                Purchase
+                                            </a>
+                                        )}
                                     </td>
                                 </tr>
                             );
