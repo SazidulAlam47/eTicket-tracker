@@ -116,15 +116,17 @@ const Home = () => {
                             <input
                                 type="date"
                                 value={scan.date}
-                                min={new Date().toISOString().split("T")[0]} // Today
-                                max={
+                                min={new Intl.DateTimeFormat("en-CA", {
+                                    timeZone: "Asia/Dhaka",
+                                }).format(new Date())} // Today's date in Dhaka time
+                                max={new Intl.DateTimeFormat("en-CA", {
+                                    timeZone: "Asia/Dhaka",
+                                }).format(
                                     new Date(
-                                        Date.now() + 11 * 24 * 60 * 60 * 1000
+                                        Date.now() + 10 * 24 * 60 * 60 * 1000
                                     )
-                                        .toISOString()
-                                        .split("T")[0]
-                                } // Today + 10 days
-                                onFocus={(e) => e.target.showPicker()} // This triggers the date picker
+                                )} // Today + 10 days in Dhaka time
+                                onFocus={(e) => e.target.showPicker()} // Triggers the date picker
                                 onChange={(e) =>
                                     handleChange(index, "date", e.target.value)
                                 }
