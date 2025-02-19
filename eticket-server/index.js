@@ -11,14 +11,6 @@ app.use(express.json());
 
 export let targetUrls = [];
 
-// Auto-clear old tickets
-setInterval(() => {
-    if (ticketArray.length > 6) {
-        ticketArray.shift();
-    }
-}, 500);
-
-
 app.get("/", (req, res) => {
     res.send('ticket tracker server is running');
 });

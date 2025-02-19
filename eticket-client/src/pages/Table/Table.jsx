@@ -31,8 +31,7 @@ const Table = () => {
 
                     if (
                         JSON.stringify(data.tickets) !==
-                            JSON.stringify(previousDataRef.current) &&
-                        data.tickets.length <= 6
+                        JSON.stringify(previousDataRef.current)
                     ) {
                         let shouldPlayAudio = false;
 
@@ -196,7 +195,7 @@ const Table = () => {
                                     <td
                                         className={`p-4 ${
                                             ticket.available
-                                                ? "text-green-900"
+                                                ? "text-green-700"
                                                 : "text-red-800"
                                         }`}
                                     >
