@@ -6,6 +6,7 @@ const Table = () => {
     const [isStopDisabled, setIsStopDisabled] = useState(true);
     const notificationAudio = useRef(new Audio("/audio/notification.mp3"));
     const previousDataRef = useRef([]);
+    const intervalIdRef = useRef(null); // Ref to store the interval ID
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -13,27 +14,49 @@ const Table = () => {
             fetch("http://localhost:8040/tickets")
                 .then((res) => res.json())
                 .then((data) => {
+                    if (!data.success) {
+                        console.error(
+                            "Puppeteer is not running. Stopping ticket checks."
+                        );
+                        fetch("http://localhost:8040/stop");
+                        alert("Server is not running.");
+                        navigate("/");
+                        return;
+                    }
+
                     if (
-                        JSON.stringify(data) !==
+                        JSON.stringify(data.tickets) !==
                             JSON.stringify(previousDataRef.current) &&
-                        data.length <= 6
+                        data.tickets.length <= 6
                     ) {
                         console.log("New tickets available");
                         notificationAudio.current.currentTime = 0;
                         notificationAudio.current.play();
                     }
-                    previousDataRef.current = data;
-                    setTickets(data);
+
+                    previousDataRef.current = data.tickets;
+                    setTickets(data.tickets);
                 })
                 .catch((error) => {
-                    console.error(error);
-                    alert("Error fetching data");
+                    console.error("Error fetching data:", error);
+                    fetch("http://localhost:8040/stop");
+                    alert("Internal Server Error");
+                    navigate("/");
                 });
         };
 
-        const interval = setInterval(fetchTickets, 500);
-        return () => clearInterval(interval);
-    }, []);
+        // Delay fetching for 10 seconds before starting the interval
+        const timeout = setTimeout(() => {
+            fetchTickets(); // Fetch immediately after delay
+            const interval = setInterval(fetchTickets, 1000); // Fetch every 5 seconds
+            intervalIdRef.current = interval; // Store the interval ID
+        }, 5000); // 10-second delay before first fetch
+
+        return () => {
+            clearTimeout(timeout);
+            clearInterval(intervalIdRef.current); // Clear the interval when the component unmounts
+        };
+    }, [navigate]);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -47,13 +70,14 @@ const Table = () => {
     };
 
     const handleStop = () => {
+        clearInterval(intervalIdRef.current); // Clear the interval when stop is clicked
         fetch("http://localhost:8040/stop")
             .then(() => {
                 navigate("/");
             })
             .catch((error) => {
                 console.error(error);
-                alert("Error scoping");
+                navigate("/");
             });
     };
 

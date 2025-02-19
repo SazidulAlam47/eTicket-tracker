@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { startPuppeteer, stopPuppeteer, ticketArray } from "./puppeteer.js";
+import { isPuppeteerRunning, startPuppeteer, stopPuppeteer, ticketArray } from "./puppeteer.js";
 
 const app = express();
 const port = 8040;
@@ -24,8 +24,19 @@ app.get("/", (req, res) => {
 });
 
 app.get('/tickets', (req, res) => {
-    res.json(ticketArray);
+    if (!isPuppeteerRunning()) {
+        return res.status(503).json({
+            success: false,
+            message: "Puppeteer is not running. Please start Puppeteer and try again."
+        });
+    }
+
+    res.json({
+        success: true,
+        tickets: ticketArray
+    });
 });
+
 
 app.get("/clear", (req, res) => {
     ticketArray.length = 0;
@@ -62,7 +73,7 @@ app.post("/start", (req, res) => {
 
 // Start the Express Server
 app.listen(port, () => {
-    console.log(`🚀 Server running on Port:${port}`);
+    console.log(`🚀 Server running on http://localhost:${port}/`);
 });
 
 export default app;
