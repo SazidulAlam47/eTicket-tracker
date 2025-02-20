@@ -172,7 +172,7 @@ const Table = () => {
                             <th className="p-4 border-b">Date</th>
                             <th className="p-4 border-b">Seats</th>
                             <th className="p-4 border-b">Was available at</th>
-                            <th className="p-4 border-b">Availability</th>
+                            <th className="p-4 border-b">Status</th>
                             <th className="p-4 border-b">Purchase</th>
                         </tr>
                     </thead>
