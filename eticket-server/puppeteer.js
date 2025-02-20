@@ -61,63 +61,29 @@ export async function startPuppeteer() {
                             return results;
                         });
 
-                        // Ensure ticket availability is updated correctly for each URL
+                        // Mark all tickets from this URL as unavailable initially
                         ticketArray.forEach(ticket => {
-                            if (ticket.link.replace(/=[^=]*$/, "=") === url.replace(/=[^=]*$/, "=")) { // Only update tickets from the same URL
-                                const exists = data.some(newTicket =>
-                                    newTicket.train === ticket.train &&
-                                    newTicket.class === ticket.class &&
-                                    newTicket.date === ticket.date &&
-                                    newTicket.seat === ticket.seat &&
-                                    newTicket.fromTo === ticket.fromTo &&
-                                    newTicket.link === ticket.link
-                                );
-
-                                if (!exists) {
-                                    ticket.available = false;
-                                    ticket.seat = 'N/A';
-                                }
+                            if (ticket.link.replace(/=[^=]*$/, "=") === url.replace(/=[^=]*$/, "=")) {
+                                ticket.available = false;
+                                ticket.seat = 'N/A';
                             }
                         });
 
-                        // If the ticket is the same but seat number changes, update seat count
+                        // Update or add new tickets
                         data.forEach(ticket => {
                             const existingTicket = ticketArray.find(t =>
                                 t.train === ticket.train &&
-                                t.class === ticket.class &&
-                                t.date === ticket.date &&
-                                t.fromTo === ticket.fromTo &&
-                                t.link.replace(/=[^=]*$/, "=") === ticket.link.replace(/=[^=]*$/, "=") // Ensure we're comparing within the same link
+                                t.link === ticket.link
                             );
 
                             if (existingTicket) {
-                                if (existingTicket.seat !== ticket.seat) {
-                                    existingTicket.seat = ticket.seat; // Update only seat number
-                                }
+                                existingTicket.seat = ticket.seat;
                                 existingTicket.available = ticket.available;
                                 existingTicket.time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
                             } else {
-                                ticketArray.push(ticket); // Add new ticket if not already in the array
-                            }
-                        });
-
-                        // Ensure only new unique tickets are added
-                        data.forEach(ticket => {
-                            const exists = ticketArray.some(t =>
-                                t.train === ticket.train &&
-                                t.class === ticket.class &&
-                                t.date === ticket.date &&
-                                t.seat === ticket.seat &&
-                                t.fromTo === ticket.fromTo &&
-                                t.available === ticket.available &&
-                                t.link.replace(/=[^=]*$/, "=") === ticket.link.replace(/=[^=]*$/, "=") // Make sure it's from the same link
-                            );
-
-                            if (!exists) {
                                 ticketArray.push(ticket);
                             }
                         });
-
 
                         console.log(data);
                     }

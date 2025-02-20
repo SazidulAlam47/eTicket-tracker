@@ -59,7 +59,7 @@ const Home = () => {
         <div className="flex justify-center items-center min-h-screen bg-white p-5">
             <div className="w-4/5 max-w-4xl bg-white p-10 rounded-xl shadow-xl border border-gray-200">
                 <h1 className="text-center text-3xl font-bold text-gray-800 mb-6">
-                    E-Ticket Input Form
+                    E-Ticket Tracker
                 </h1>
                 <div className="mb-6">
                     <label className="block text-gray-600 text-lg mb-2">
