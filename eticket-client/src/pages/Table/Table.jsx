@@ -126,19 +126,30 @@ const Table = () => {
             });
     };
 
+    const handleClear = () => {
+        fetch("http://localhost:8040/clear");
+    };
+
     return (
         <div className="flex flex-col items-center min-h-screen p-5 bg-gray-100">
             <div className="flex gap-4 mb-6">
                 <button
                     onClick={handleTest}
-                    className="px-5 py-2 bg-blue-700 text-white rounded-lg shadow-md hover:bg-blue-900 transition-all"
+                    className="px-5 py-2 bg-blue-700 text-white rounded-lg shadow-md hover:bg-blue-900 transition-all cursor-pointer"
                 >
                     Test Audio
                 </button>
                 <button
+                    onClick={handleClear}
+                    disabled={isStopDisabled}
+                    className="px-5 py-2 bg-teal-700 text-white rounded-lg shadow-md hover:bg-teal-900 transition-all cursor-pointer"
+                >
+                    Clear Unavailable
+                </button>
+                <button
                     onClick={handleStop}
                     disabled={isStopDisabled}
-                    className={`px-5 py-2 rounded-lg shadow-md transition-all ${
+                    className={`px-5 py-2 rounded-lg shadow-md transition-all cursor-pointer ${
                         isStopDisabled
                             ? "bg-gray-400 cursor-not-allowed"
                             : "bg-red-700 text-white hover:bg-red-900"

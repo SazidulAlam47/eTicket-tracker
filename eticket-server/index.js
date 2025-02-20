@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { isPuppeteerRunning, startPuppeteer, stopPuppeteer, ticketArray } from "./puppeteer.js";
+import { isPuppeteerRunning, removeUnavailableTickets, startPuppeteer, stopPuppeteer, ticketArray } from "./puppeteer.js";
 
 const app = express();
 const port = 8040;
@@ -31,7 +31,7 @@ app.get('/tickets', (req, res) => {
 
 
 app.get("/clear", (req, res) => {
-    ticketArray.length = 0;
+    removeUnavailableTickets();
     res.json({ success: true });
 });
 

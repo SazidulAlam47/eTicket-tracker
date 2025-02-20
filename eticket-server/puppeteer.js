@@ -65,7 +65,7 @@ export async function startPuppeteer() {
                         ticketArray.forEach(ticket => {
                             if (ticket.link.replace(/=[^=]*$/, "=") === url.replace(/=[^=]*$/, "=")) {
                                 ticket.available = false;
-                                ticket.seat = 'N/A';
+                                ticket.seat = 0;
                             }
                         });
 
@@ -184,4 +184,12 @@ export async function stopPuppeteer() {
 
 export function isPuppeteerRunning() {
     return browserInstance && browserInstance.isConnected();
+}
+
+export function removeUnavailableTickets() {
+    for (let i = ticketArray.length - 1; i >= 0; i--) {
+        if (!ticketArray[i].available) {
+            ticketArray.splice(i, 1);
+        }
+    }
 }
