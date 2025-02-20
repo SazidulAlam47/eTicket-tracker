@@ -51,38 +51,43 @@ export async function startPuppeteer() {
                                         date: document.querySelector('.date_time')?.innerText || 'Date not found',
                                         seat: seatNumber,
                                         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }),
-                                        link: window.location.href.substring(0, 103) + seatClass,
+                                        link: window.location.href.replace(/=[^=]*$/, "=") + seatClass,
                                         available: true,
                                     });
+
                                 }
                             });
 
                             return results;
                         });
 
-                        // if the ticket still available or not
+                        // Ensure ticket availability is updated correctly for each URL
                         ticketArray.forEach(ticket => {
-                            const exists = data.some(newTicket =>
-                                newTicket.train === ticket.train &&
-                                newTicket.class === ticket.class &&
-                                newTicket.date === ticket.date &&
-                                newTicket.seat === ticket.seat &&
-                                newTicket.fromTo === ticket.fromTo
-                            );
+                            if (ticket.link.replace(/=[^=]*$/, "=") === url.replace(/=[^=]*$/, "=")) { // Only update tickets from the same URL
+                                const exists = data.some(newTicket =>
+                                    newTicket.train === ticket.train &&
+                                    newTicket.class === ticket.class &&
+                                    newTicket.date === ticket.date &&
+                                    newTicket.seat === ticket.seat &&
+                                    newTicket.fromTo === ticket.fromTo &&
+                                    newTicket.link === ticket.link
+                                );
 
-                            if (!exists) {
-                                ticket.available = false;
-                                ticket.seat = 'N/A'
+                                if (!exists) {
+                                    ticket.available = false;
+                                    ticket.seat = 'N/A';
+                                }
                             }
                         });
 
-                        // if it is the same ticket but seat number changes, update seat count
+                        // If the ticket is the same but seat number changes, update seat count
                         data.forEach(ticket => {
                             const existingTicket = ticketArray.find(t =>
                                 t.train === ticket.train &&
                                 t.class === ticket.class &&
                                 t.date === ticket.date &&
-                                t.fromTo === ticket.fromTo
+                                t.fromTo === ticket.fromTo &&
+                                t.link.replace(/=[^=]*$/, "=") === ticket.link.replace(/=[^=]*$/, "=") // Ensure we're comparing within the same link
                             );
 
                             if (existingTicket) {
@@ -96,8 +101,7 @@ export async function startPuppeteer() {
                             }
                         });
 
-
-                        // if it is same ticket or not
+                        // Ensure only new unique tickets are added
                         data.forEach(ticket => {
                             const exists = ticketArray.some(t =>
                                 t.train === ticket.train &&
@@ -105,13 +109,15 @@ export async function startPuppeteer() {
                                 t.date === ticket.date &&
                                 t.seat === ticket.seat &&
                                 t.fromTo === ticket.fromTo &&
-                                t.available === ticket.available
+                                t.available === ticket.available &&
+                                t.link.replace(/=[^=]*$/, "=") === ticket.link.replace(/=[^=]*$/, "=") // Make sure it's from the same link
                             );
 
                             if (!exists) {
                                 ticketArray.push(ticket);
                             }
                         });
+
 
                         console.log(data);
                     }
@@ -146,12 +152,12 @@ export async function startPuppeteer() {
 
             } catch (error) {
                 console.error(`Error loading page ${url}: ${error.message}`);
-                await stopPuppeteer();
+                stopPuppeteer(); // Handle the error and stop Puppeteer without crashing the server
             }
         }
     } catch (error) {
         console.error("Error starting Puppeteer:", error);
-        await stopPuppeteer();
+        stopPuppeteer(); // Handle the error and stop Puppeteer without crashing the server
     }
 }
 
@@ -164,12 +170,14 @@ export async function stopPuppeteer() {
     console.log("Stopping Puppeteer...");
 
     try {
+        // Clear all timeouts and intervals
         pageTimeouts.forEach(clearTimeout);
         pageTimeouts.length = 0;
 
         pageReloadIntervals.forEach(clearInterval);
         pageReloadIntervals.length = 0;
 
+        // Close all pages safely
         const pages = await browserInstance.pages();
         for (let page of pages) {
             try {
@@ -181,10 +189,16 @@ export async function stopPuppeteer() {
             }
         }
 
+        // Close browser safely
         if (browserInstance.isConnected()) {
-            await browserInstance.close();
+            try {
+                await browserInstance.close();
+            } catch (error) {
+                console.warn("Error while closing browser:", error.message);
+            }
         }
 
+        // Kill browser process if still running
         const browserProcess = browserInstance.process();
         if (browserProcess) {
             try {
