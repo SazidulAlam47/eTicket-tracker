@@ -74,7 +74,7 @@ const Home = () => {
                     />
                     <button
                         onClick={generateInputs}
-                        className="mt-4 w-full px-4 py-3 bg-green-500 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-green-600 transition duration-300"
+                        className="mt-4 w-full px-4 py-3 bg-green-500 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-green-600 transition duration-300 cursor-pointer"
                     >
                         Generate
                     </button>
@@ -138,7 +138,7 @@ const Home = () => {
                 {scans.length > 0 && (
                     <button
                         onClick={sendData}
-                        className="w-full mt-6 px-4 py-3 bg-blue-500 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-blue-600 transition duration-300"
+                        className="w-full mt-6 px-4 py-3 bg-blue-500 text-white text-lg font-semibold rounded-lg shadow-md hover:bg-blue-600 transition duration-300 cursor-pointer"
                     >
                         Start Scanning
                     </button>
