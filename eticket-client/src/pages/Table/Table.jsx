@@ -24,11 +24,6 @@ const Table = () => {
                         return;
                     }
 
-                    console.log({
-                        new: data.tickets,
-                        old: previousDataRef.current,
-                    });
-
                     if (
                         JSON.stringify(data.tickets) !==
                         JSON.stringify(previousDataRef.current)
@@ -51,17 +46,25 @@ const Table = () => {
                             } else {
                                 // Check for availability change
                                 if (
-                                    matchingOldTicket.available === false &&
-                                    newTicket.available === true
+                                    !matchingOldTicket.available &&
+                                    newTicket.available
                                 ) {
                                     shouldPlayAudio = true;
                                 }
 
-                                // Ignore seat number changes (do not trigger audio)
+                                // Ignore seat number changes unless seat count increases
                                 if (
-                                    matchingOldTicket.available ===
-                                        newTicket.available &&
-                                    matchingOldTicket.seat !== newTicket.seat
+                                    matchingOldTicket.available &&
+                                    newTicket.available &&
+                                    newTicket.seat > matchingOldTicket.seat
+                                ) {
+                                    shouldPlayAudio = true;
+                                }
+
+                                if (
+                                    matchingOldTicket.available &&
+                                    newTicket.available &&
+                                    newTicket.seat < matchingOldTicket.seat
                                 ) {
                                     shouldPlayAudio = false;
                                 }
