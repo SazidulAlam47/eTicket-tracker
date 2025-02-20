@@ -164,23 +164,6 @@ const Table = () => {
                     </thead>
                     <tbody>
                         {tickets.map((ticket, index) => {
-                            const [day, month, year] = ticket.date.split("-");
-                            const monthAbbreviations = {
-                                January: "Jan",
-                                February: "Feb",
-                                March: "Mar",
-                                April: "Apr",
-                                May: "May",
-                                June: "Jun",
-                                July: "Jul",
-                                August: "Aug",
-                                September: "Sep",
-                                October: "Oct",
-                                November: "Nov",
-                                December: "Dec",
-                            };
-                            const formattedDate = `${day}-${monthAbbreviations[month]}-${year}`;
-
                             return (
                                 <tr
                                     key={index}
@@ -206,17 +189,7 @@ const Table = () => {
                                     <td className="p-4">
                                         {ticket.available && (
                                             <a
-                                                href={`https://eticket.railway.gov.bd/booking/train/search?fromcity=${
-                                                    ticket.fromTo.split(
-                                                        " - "
-                                                    )[0]
-                                                }&tocity=${
-                                                    ticket.fromTo.split(
-                                                        " - "
-                                                    )[1]
-                                                }&doj=${formattedDate}&class=${
-                                                    ticket.class
-                                                }`}
+                                                href={ticket.link}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-800 transition-all inline-block disabled:bg-green-950"

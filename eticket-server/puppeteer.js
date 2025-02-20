@@ -51,7 +51,7 @@ export async function startPuppeteer() {
                                         date: document.querySelector('.date_time')?.innerText || 'Date not found',
                                         seat: seatNumber,
                                         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }),
-                                        link: window.location.href,
+                                        link: window.location.href.substring(0, 103) + seatClass,
                                         available: true,
                                     });
                                 }
