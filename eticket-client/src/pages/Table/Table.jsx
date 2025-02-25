@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Table = () => {
     const [tickets, setTickets] = useState([]);
@@ -19,7 +20,7 @@ const Table = () => {
                             "Puppeteer is not running. Stopping ticket checks."
                         );
                         fetch("http://localhost:8040/stop");
-                        alert("Server is not running.");
+                        toast.error("Server is not running.");
                         navigate("/");
                         return;
                     }
@@ -85,7 +86,7 @@ const Table = () => {
                 .catch((error) => {
                     console.error("Error fetching data:", error);
                     fetch("http://localhost:8040/stop");
-                    alert("Internal Server Error");
+                    toast.error("Server is not running.");
                     navigate("/");
                 });
         };
@@ -104,6 +105,7 @@ const Table = () => {
     }, [navigate]);
 
     useEffect(() => {
+        toast.info("Scanning for tickets, please wait..");
         const timer = setTimeout(() => {
             setIsStopDisabled(false);
         }, 10000);

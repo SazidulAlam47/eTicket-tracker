@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Home = () => {
     const [scanCount, setScanCount] = useState("");
@@ -9,7 +10,7 @@ const Home = () => {
     const generateInputs = () => {
         const count = parseInt(scanCount, 10);
         if (isNaN(count) || count < 1) {
-            alert("Please enter a valid number of scans.");
+            toast.error("Please enter a valid number of scans.");
             return;
         }
         setScans(
@@ -34,7 +35,7 @@ const Home = () => {
 
     const sendData = () => {
         if (scans.some((scan) => !scan.from || !scan.to || !scan.date)) {
-            alert("Please fill out all fields.");
+            toast.error("Please fill out all fields.");
             return;
         }
 
@@ -50,7 +51,7 @@ const Home = () => {
                 }
             })
             .catch((error) => {
-                alert("Can not connect to server");
+                toast.error("Can not connect to server");
                 console.error("Error:", error);
             });
     };
