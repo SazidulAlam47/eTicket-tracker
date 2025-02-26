@@ -129,7 +129,13 @@ const Table = () => {
     };
 
     const handleClear = () => {
-        fetch("http://localhost:8040/clear");
+        fetch("http://localhost:8040/clear")
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.success) {
+                    toast.success("Unavailable tickets removed");
+                }
+            });
     };
 
     return (
