@@ -5,6 +5,7 @@ let browserInstance;
 export const ticketArray = [];
 const pageReloadIntervals = [];
 const pageTimeouts = [];
+export let ticketsFound = true;
 
 export async function startPuppeteer() {
     try {
@@ -27,9 +28,18 @@ export async function startPuppeteer() {
                         return;
                     }
 
+                    const noTicket = await page.$$('.no-ticket-found-first-msg');
+
+                    if (noTicket.length) {
+                        console.error('No train found for one of the selected dates or cities.');
+                        stopPuppeteer();
+                        ticketsFound = false;
+                    }
+
                     const seats = await page.$$('.all-seats');
 
                     if (seats.length) {
+                        ticketsFound = true;
                         checked = true;
                         const data = await page.evaluate(() => {
                             const seatElements = document.querySelectorAll('.all-seats');

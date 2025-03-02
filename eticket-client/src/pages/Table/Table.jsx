@@ -16,11 +16,8 @@ const Table = () => {
                 .then((res) => res.json())
                 .then((data) => {
                     if (!data.success) {
-                        console.error(
-                            "Puppeteer is not running. Stopping ticket checks."
-                        );
                         fetch("http://localhost:8040/stop");
-                        toast.error("Server is not running.");
+                        toast.error(data.message);
                         navigate("/");
                         return;
                     }

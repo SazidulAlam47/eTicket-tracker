@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { isPuppeteerRunning, removeUnavailableTickets, startPuppeteer, stopPuppeteer, ticketArray } from "./puppeteer.js";
+import { isPuppeteerRunning, removeUnavailableTickets, startPuppeteer, stopPuppeteer, ticketArray, ticketsFound } from "./puppeteer.js";
 
 const app = express();
 const port = 8040;
@@ -16,10 +16,17 @@ app.get("/", (req, res) => {
 });
 
 app.get('/tickets', (req, res) => {
+    if (!ticketsFound) {
+        return res.status(503).json({
+            success: false,
+            message: "No train found for one of the selected dates or cities."
+        });
+    }
+
     if (!isPuppeteerRunning()) {
         return res.status(503).json({
             success: false,
-            message: "Puppeteer is not running. Please start Puppeteer and try again."
+            message: "Server is not running."
         });
     }
 
