@@ -9,6 +9,7 @@ export let ticketsFound = true;
 
 export async function startPuppeteer() {
     try {
+        ticketsFound = true;
         browserInstance = await puppeteer.launch({
             headless: true,
             defaultViewport: null,

@@ -91,9 +91,9 @@ const Table = () => {
         // Delay fetching for 10 seconds before starting the interval
         const timeout = setTimeout(() => {
             fetchTickets(); // Fetch immediately after delay
-            const interval = setInterval(fetchTickets, 1000); // Fetch every 5 seconds
+            const interval = setInterval(fetchTickets, 1000); // Fetch every 1 seconds
             intervalIdRef.current = interval; // Store the interval ID
-        }, 5000); // 10-second delay before first fetch
+        }, 5000); // 5-second delay before first fetch
 
         return () => {
             clearTimeout(timeout);

@@ -49,7 +49,6 @@ app.get("/stop", (req, res) => {
 });
 
 app.post("/start", (req, res) => {
-
     const data = req.body;
 
     targetUrls = data.map(item => {
