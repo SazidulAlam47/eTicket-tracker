@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
 
 app.get('/tickets', (req, res) => {
     if (!ticketsFound) {
-        return res.status(503).json({
+        return res.status(404).json({
             success: false,
             message: "No train found for one of the selected dates or cities."
         });
