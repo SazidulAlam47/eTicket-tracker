@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const Table = () => {
+    const [noTicketMessage, setNoTicketMessage] = useState(
+        "Scanning for tickets, please wait.."
+    );
     const [tickets, setTickets] = useState([]);
     const [isStopDisabled, setIsStopDisabled] = useState(true);
     const notificationAudio = useRef(new Audio("/audio/notification.mp3"));
@@ -102,9 +105,11 @@ const Table = () => {
     }, [navigate]);
 
     useEffect(() => {
-        toast.info("Scanning for tickets, please wait..");
         const timer = setTimeout(() => {
             setIsStopDisabled(false);
+            setNoTicketMessage(
+                "Tickets are currently not available. They will be displayed here once they become available."
+            );
         }, 10000);
         return () => clearTimeout(timer);
     }, []);
@@ -164,8 +169,8 @@ const Table = () => {
                 </button>
             </div>
             {tickets.length === 0 ? (
-                <div className="text-gray-600 text-lg font-semibold mt-5">
-                    Tickets are currently not available
+                <div className="text-gray-600 text-xl font-semibold mt-5">
+                    {noTicketMessage}
                 </div>
             ) : (
                 <table className="w-4/5 bg-white shadow-md rounded-lg overflow-hidden border border-gray-200">
