@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { citiesOptions } from "../../constants/searchCities";
+import Select from "react-select";
 
 const Home = () => {
     const [scanCount, setScanCount] = useState("");
     const [scans, setScans] = useState([]);
     const navigate = useNavigate();
+
+    console.log(scans);
 
     const generateInputs = () => {
         const count = parseInt(scanCount, 10);
@@ -92,25 +96,38 @@ const Home = () => {
                             <label className="block text-gray-600 mb-1">
                                 From:
                             </label>
-                            <input
-                                type="text"
-                                value={scan.from}
-                                onChange={(e) =>
-                                    handleChange(index, "from", e.target.value)
-                                }
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            <Select
+                                options={citiesOptions}
+                                isClearable
+                                isSearchable
+                                placeholder="Select city"
+                                onChange={(selectedOption) => {
+                                    handleChange(
+                                        index,
+                                        "from",
+                                        selectedOption.value
+                                    );
+                                }}
+                                className="text-md"
                             />
                             <label className="block text-gray-600 mt-4 mb-1">
                                 To:
                             </label>
-                            <input
-                                type="text"
-                                value={scan.to}
-                                onChange={(e) =>
-                                    handleChange(index, "to", e.target.value)
-                                }
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            <Select
+                                options={citiesOptions}
+                                isClearable
+                                isSearchable
+                                placeholder="Select city"
+                                onChange={(selectedOption) => {
+                                    handleChange(
+                                        index,
+                                        "to",
+                                        selectedOption.value
+                                    );
+                                }}
+                                className="text-md"
                             />
+
                             <label className="block text-gray-600 mt-4 mb-1">
                                 Date:
                             </label>
@@ -131,7 +148,7 @@ const Home = () => {
                                 onChange={(e) =>
                                     handleChange(index, "date", e.target.value)
                                 }
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer"
+                                className="w-full p-2 border bg-white border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer"
                             />
                         </div>
                     ))}
