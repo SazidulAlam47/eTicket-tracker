@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { citiesOptions } from "../../constants/searchCities";
 import Select from "react-select";
+import bgImage from "../../assets/page-bg.svg";
 
 const Home = () => {
     const [scanCount, setScanCount] = useState("");
@@ -59,7 +60,13 @@ const Home = () => {
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-white p-5">
+        <div className="flex justify-center items-center min-h-screen p-5">
+            <img
+                src={bgImage}
+                alt=""
+                className="fixed bottom-0 right-0 w-4xl -z-10 opacity-90"
+            />
+            <div className="fixed bottom-0 top-0 right-0 left-0 -z-20 bg-[#e4eae8]" />
             <div className="w-4/5 max-w-4xl bg-white p-10 rounded-xl shadow-xl border border-gray-200">
                 <h1 className="text-center text-3xl font-bold text-gray-800 mb-6">
                     Train Ticket Tracker

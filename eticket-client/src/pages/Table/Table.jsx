@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import bgImage from "../../assets/page-bg.svg";
 
 const Table = () => {
     const [noTicketMessage, setNoTicketMessage] = useState(
@@ -141,7 +142,13 @@ const Table = () => {
     };
 
     return (
-        <div className="flex flex-col items-center min-h-screen p-5 bg-gray-100">
+        <div className="flex flex-col items-center min-h-screen p-5">
+            <img
+                src={bgImage}
+                alt=""
+                className="fixed bottom-0 right-0 w-4xl -z-10 opacity-90"
+            />
+            <div className="fixed bottom-0 top-0 right-0 left-0 -z-20 bg-[#e4eae8]" />
             <div className="flex gap-4 mb-6">
                 <button
                     onClick={handleTest}
