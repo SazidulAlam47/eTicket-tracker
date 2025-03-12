@@ -101,6 +101,11 @@ const Home = () => {
                                 isClearable
                                 isSearchable
                                 placeholder="Select city"
+                                value={
+                                    citiesOptions.find(
+                                        (option) => option.value === scan.from
+                                    ) || null
+                                }
                                 onChange={(selectedOption) => {
                                     handleChange(
                                         index,
@@ -120,6 +125,11 @@ const Home = () => {
                                 isClearable
                                 isSearchable
                                 placeholder="Select city"
+                                value={
+                                    citiesOptions.find(
+                                        (option) => option.value === scan.to
+                                    ) || null
+                                }
                                 onChange={(selectedOption) => {
                                     handleChange(
                                         index,
