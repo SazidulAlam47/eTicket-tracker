@@ -105,7 +105,9 @@ const Home = () => {
                                     handleChange(
                                         index,
                                         "from",
-                                        selectedOption.value
+                                        selectedOption
+                                            ? selectedOption.value
+                                            : ""
                                     );
                                 }}
                                 className="text-md"
@@ -122,7 +124,9 @@ const Home = () => {
                                     handleChange(
                                         index,
                                         "to",
-                                        selectedOption.value
+                                        selectedOption
+                                            ? selectedOption.value
+                                            : ""
                                     );
                                 }}
                                 className="text-md"
