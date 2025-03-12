@@ -52,8 +52,8 @@ app.post("/start", (req, res) => {
     const data = req.body;
 
     targetUrls = data.map(item => {
-        const fromCity = (item.from.charAt(0).toUpperCase() + item.from.slice(1).toLowerCase()).trim();
-        const toCity = (item.to.charAt(0).toUpperCase() + item.to.slice(1).toLowerCase()).trim();
+        const fromCity = item.from.trim().replace(/ /g, '%20');
+        const toCity = item.to.trim().replace(/ /g, '%20');
         const date = new Date(item.date).toLocaleDateString('en-GB', {
             day: '2-digit',
             month: 'short',
