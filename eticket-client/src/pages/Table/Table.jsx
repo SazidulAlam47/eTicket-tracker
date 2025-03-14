@@ -5,7 +5,7 @@ import bgImage from "../../assets/page-bg.svg";
 
 const Table = () => {
     const [noTicketMessage, setNoTicketMessage] = useState(
-        "Scanning for tickets, please wait.."
+        "Scanning for tickets, please wait..."
     );
     const [tickets, setTickets] = useState([]);
     const [isStopDisabled, setIsStopDisabled] = useState(true);
@@ -176,7 +176,7 @@ const Table = () => {
                 </button>
             </div>
             {tickets.length === 0 ? (
-                <div className="text-gray-600 text-xl font-semibold mt-5">
+                <div className="text-gray-600 text-xl font-semibold mt-5 bg-white py-3 px-4 rounded-xl">
                     {noTicketMessage}
                 </div>
             ) : (
