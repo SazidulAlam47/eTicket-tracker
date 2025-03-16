@@ -30,4 +30,8 @@ Follow these steps to set up the BD Railway eTicket Tracker:
 
     - Run the `run.bat`.
 
-Enjoy.
+Enjoy!
+
+## Legal Disclaimer
+
+Web scraping, in itself, is not inherently illegal. This scraper does not engage in any fraudulent activity, such as bulk booking or automated payments, that could be used for black-market purposes. Its sole function is to display real-time ticket availability by refreshing the page every 20 seconds. It does not automatically book tickets or process payments. Users must visit the official website to manually complete their bookings and make payments.
